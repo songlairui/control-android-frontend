@@ -54,13 +54,8 @@
       </el-menu>
     </el-aside>
     <el-container>
-      <el-header style="height:auto">
-        <adb-command/>
-      </el-header>
-      <el-main>
-        <router-view/>
-      </el-main>
-      <el-footer>Footer</el-footer>
+      <router-view/>
+      <adb-command/>
     </el-container>
   </el-container>
 </template>

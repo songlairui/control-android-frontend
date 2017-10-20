@@ -1,7 +1,7 @@
 <template lang="pug">
   div
     div.box-card(v-for='(device,idx) in devices' :key='idx')
-      el-row(type='flex')
+      el-row(type='flex' style={flexFlow:'column',minWidth:'220px',paddingLeft:'.5em'})
         el-col(style={flex:'1 1 auto',width:'auto'})
           pre
             | 设备信息：
@@ -48,6 +48,10 @@ export default {
     },
     async checkMinimap() {
       let result = await api.checkMinimap()
+      if (result.err) {
+        this.runningPid = []
+        return
+      }
       this.runningPid = result.data.result
       // console.log('[result]', this.runningPid)
     },

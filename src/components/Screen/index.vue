@@ -1,9 +1,10 @@
 <template lang="pug">
-  div.screen
-    canvas#screen(v-screen='screendata')
-    el-button-group
+  div.screenPage
+    el-button-group.action
       el-button(type="primary" size="mini" round @click='connectWs') 连接ws
       el-button(type="danger" size="mini" round @click='disconnectWs') 断开ws
+    div.stage
+      canvas#screen(v-screen='screendata')
 </template>
 <script>
 export default {
@@ -86,13 +87,33 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-.screen
-  width auto
+.screenPage
+  width 100%
   height 100%
-  border thin solid red
+  display flex
+  flex-flow column
+  // border thin solid red
+
+.stage
+  width 100%
+  flex 1
+  // border thin solid yellowgreen
+  display flex
+  justify-content center
+  align-items center
+  padding 10px
+  box-sizing border-box
+
+.action
+  flex 0 0 auto
+  display flex
+  justify-content center
+  padding 10px
 
 canvas#screen
-  height 100%
-  max-height 90%
+  max-height 100%
+  max-width 100%
+  border thin solid yellowgreen
+  border-radius 4px
 </style>
 
