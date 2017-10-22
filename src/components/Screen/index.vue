@@ -7,10 +7,11 @@
       el-button(type="primary" size="mini" round @click='key("back")') 返回
       el-button(type="primary" size="mini" round @click='key("home")') 桌面
       el-button(type="primary" size="mini" round @click='key("menu")') 菜单
-    div.stage
+    div.stage(:style='`height:${Math.round(8000 * canvasHeight/canvasWidth)/100}vw;max-width:${Math.round(8000 * canvasWidth/canvasHeight)/100}vh`')
       canvas#screen(v-screen='screendata' @mousedown='mouseAct'  @mouseup='mouseAct'  @mousemove='mouseAct' :width='canvasWidth'  :height='canvasHeight')
 </template>
 <script>
+// ,height:Math.round(80 * canvasHeight/canvasWidth)/100 + 'vw',maxWidth:+'vh'
 // import Vue from 'vue'
 import _ from 'lodash'
 import keyMap from '@/api/android_key.json'
@@ -205,30 +206,30 @@ export default {
 .screenPage
   width 100%
   height 100%
-  display flex
-  flex-flow column
-  // border thin solid red
 
 .stage
-  width 100%
-  flex 1
-  // border thin solid yellowgreen
-  display flex
-  justify-content center
-  align-items center
-  padding 10px
-  box-sizing border-box
+  width 80vw
+  max-height 80vh
+  // background yellowgreen
+  position relative
+  margin-left auto
+  margin-right auto
+  // box-sizing border-box
 
 .action
-  flex 0 0 auto
+  max-height 10vh
   display flex
   justify-content center
   padding 10px
 
 canvas#screen
-  max-height 100%
-  max-width 100%
-  border thin solid yellowgreen
+  // display none
+  position absolute
+  width 100%
+  height 100%
+  left 0
+  top 0
+  // border thin solid yellowgreen
   border-radius 4px
 </style>
 
