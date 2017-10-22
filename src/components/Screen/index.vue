@@ -142,7 +142,7 @@ export default {
       let ws = this.ws
       ws.send(JSON.stringify({
         type: 'key',
-        data: `${keycode}`
+        data: keyname.toLowerCase()
       }))
     }
   },
