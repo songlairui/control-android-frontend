@@ -93,33 +93,6 @@ export default {
         this.ws = null
       }
     },
-    async click(e) {
-      // console.info({ e }, this.canvasBoundary)
-      // window.tmp = e
-      let x = Math.round(this.ratio * (e.x - this.canvasBoundary.x))
-      let y = Math.round(this.ratio * (e.y - this.canvasBoundary.y))
-      console.info({ x, y })
-      let ws = this.ws
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({
-          type: 'touch',
-          data: `d 0 ${x} ${y} 50\n`
-        }))
-        ws.send(JSON.stringify({
-          type: 'touch',
-          data: `c\n`
-        }))
-        await new Promise(resolve => setTimeout(resolve, 50))
-        ws.send(JSON.stringify({
-          type: 'touch',
-          data: `u 0\n`
-        }))
-        ws.send(JSON.stringify({
-          type: 'touch',
-          data: `c\n`
-        }))
-      }
-    },
     async mouseAct(e) {
       // console.info('mouseAct', e.type)
       // this.flag = 'NONE'  // DRAGGING
@@ -134,14 +107,14 @@ export default {
           if (this.flag === 'TRY' || this.flag === 'DRAGGING') {
             ws.send(JSON.stringify({
               type: 'touch',
-              data: `${this.flag === 'TRY' ? 'd' : 'm'} 0 ${x} ${y} 50\n`
+              data: {
+                act: 'm',
+                x,
+                y
+              }
             }))
-            ws.send(JSON.stringify({
-              type: 'touch',
-              data: `c\n`
-            }))
+            // `${} 0 ${x} ${y} 50\n`
             this.flag = 'DRAGGING'
-            console.info('moving')
           }
 
           break
@@ -152,27 +125,34 @@ export default {
           this.flag = 'TRY'
           ws.send(JSON.stringify({
             type: 'touch',
-            data: `r\n`
+            data: {
+              act: 'r'
+            }
+          }))
+          ws.send(JSON.stringify({
+            type: 'touch',
+            data: {
+              act: 'd',
+              x,
+              y
+            }
           }))
           break
 
         case 'mouseup':
-          console.info('mouseup')
+          ws.send(JSON.stringify({
+            type: 'touch',
+            data: {
+              act: 'u'
+            }
+          }))
           if (this.flag !== 'DRAGGING') {
             // this commit click
-            console.info('click')
-            await this.click(e)
+            console.info(`click @ ${x} ${y}`)
+            // await this.click(e)
           } else {
             // this commit swipe
-            console.info('move')
-            ws.send(JSON.stringify({
-              type: 'touch',
-              data: `u 0\n`
-            }))
-            ws.send(JSON.stringify({
-              type: 'touch',
-              data: `c\n`
-            }))
+            console.info('move complete')
           }
           this.flag = 'NONE'
           break
