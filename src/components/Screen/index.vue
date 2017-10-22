@@ -3,12 +3,17 @@
     el-button-group.action
       el-button(type="primary" size="mini" round @click='connectWs') 连接ws
       el-button(type="danger" size="mini" round @click='disconnectWs') 断开ws
+    el-button-group.action
+      el-button(type="primary" size="mini" round @click='key("back")') 返回
+      el-button(type="primary" size="mini" round @click='key("home")') 桌面
+      el-button(type="primary" size="mini" round @click='key("menu")') 菜单
     div.stage
       canvas#screen(v-screen='screendata' @click='click' @mousemove='mousemove' :width='canvasWidth'  :height='canvasHeight')
 </template>
 <script>
 // import Vue from 'vue'
 import _ from 'lodash'
+import keyMap from '@/api/android_key.json'
 
 // let firstImgLoad = false
 
@@ -87,7 +92,7 @@ export default {
         this.ws = null
       }
     },
-    click(e) {
+    async click(e) {
       // console.info({ e }, this.canvasBoundary)
       window.tmp = e
       let x = Math.round(this.ratio * (e.x - this.canvasBoundary.x))
@@ -95,10 +100,23 @@ export default {
       console.info({ x, y })
       let ws = this.ws
       if (ws.readyState === WebSocket.OPEN) {
-        ws.send(`d 0 ${x} ${y} 50\n`)
-        ws.send(`c\n`)
-        ws.send(`u 0\n`)
-        ws.send(`c\n`)
+        ws.send(JSON.stringify({
+          type: 'touch',
+          data: `d 0 ${x} ${y} 50\n`
+        }))
+        ws.send(JSON.stringify({
+          type: 'touch',
+          data: `c\n`
+        }))
+        await new Promise(resolve => setTimeout(resolve, 50))
+        ws.send(JSON.stringify({
+          type: 'touch',
+          data: `u 0\n`
+        }))
+        ws.send(JSON.stringify({
+          type: 'touch',
+          data: `c\n`
+        }))
       }
     },
     mousemove() {
@@ -110,13 +128,22 @@ export default {
         this.canvasBoundary = targetEl.getBoundingClientRect()
         console.info('new Boundary Data Settled')
         let width = this.canvasBoundary.width || 1
-        this.ratio = this.canvasWidth / Math.ceil(width)
+        this.ratio = this.canvasWidth * 3 / Math.ceil(width)
         console.info(`
         CANVAS EL: width - ${width}
         IMG width: ${this.canvasWidth}
         ratio: ${this.ratio}
       `)
       })
+    },
+    key(keyname) {
+      let keycode = keyMap[`KEYCODE_${keyname.toUpperCase()}`]
+      console.info('send key ', keyname, keycode)
+      let ws = this.ws
+      ws.send(JSON.stringify({
+        type: 'key',
+        data: `${keycode}`
+      }))
     }
   },
   created() {
