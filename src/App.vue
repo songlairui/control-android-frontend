@@ -1,6 +1,7 @@
 <template>
   <el-container class="container">
-    <transition name="el-fade-in">
+    <ScreenVue/>
+    <el-popover ref="popover4" placement="right" width="400" trigger="hover" popper-class='popover4'>
       <el-aside class="side" width='auto' v-show="isCollapse">
         <el-menu :default-openeds="['1','2','3']" router>
           <el-menu-item index="0">Screen</el-menu-item>
@@ -54,13 +55,13 @@
           </el-submenu>
         </el-menu>
       </el-aside>
-    </transition>
-    <ScreenVue/>
-    <transition name="el-fade-in">
-      <adb-command v-show="isCollapseR" class="popover popoverR" />
-    </transition>
-    <el-button class='switchSider' type='text' icon="el-icon-menu" @click='isCollapse = ! isCollapse'>侧边栏</el-button>
-    <el-button class='switchSider switchSiderR' type='text' icon="el-icon-menu" @click='isCollapseR = ! isCollapseR'>AdbCommand</el-button>
+    </el-popover>
+    <el-popover ref="popover1" placement="top-start" width="200" trigger="hover">
+      <adb-command v-show="isCollapseR" />
+    </el-popover>
+    <el-button v-popover:popover4 class='switchSider' type='text' icon="el-icon-menu" @click='isCollapse = ! isCollapse'>Action</el-button>
+    <el-button v-popover:popover1 class='switchSider switchSiderR' type='text' icon="el-icon-menu" @click='isCollapseR = ! isCollapseR'>AdbCommand</el-button>
+
   </el-container>
 </template>
 
@@ -105,14 +106,15 @@ body,
   height: 100%
 }
 
-.side {
-  position: absolute;
-  height: 100%;
-  z-index: 99;
+.popover4 {
+  max-height: 90%;
+  overflow: auto;
 }
 
-.side>ul {
-  padding-top: 40px;
+.side {
+  /* position: absolute; */
+  height: 100%;
+  /* z-index: 99; */
 }
 
 .switchSider {
@@ -122,16 +124,6 @@ body,
 }
 
 .switchSiderR {
-  right: 0
-}
-
-.popover {
-  position: absolute;
-  height: 100%;
-  background: lightgrey
-}
-
-.popoverR {
   right: 0
 }
 </style>

@@ -117,11 +117,9 @@ export default {
             // `${} 0 ${x} ${y} 50\n`
             this.flag = 'DRAGGING'
           }
-
           break
-
         case 'mousedown':
-          console.info('mousedown')
+          // console.info('mousedown')
           this.clickStamp = currentStamp
           this.flag = 'TRY'
           ws.send(JSON.stringify({
@@ -139,7 +137,6 @@ export default {
             }
           }))
           break
-
         case 'mouseup':
           ws.send(JSON.stringify({
             type: 'touch',
@@ -153,7 +150,7 @@ export default {
             // await this.click(e)
           } else {
             // this commit swipe
-            console.info('move complete')
+            // console.info('move complete')
           }
           this.flag = 'NONE'
           break

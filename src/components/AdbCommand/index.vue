@@ -2,7 +2,7 @@
   div.box-card
     el-row(type='flex' style={flexFlow:'column',minWidth:'220px',paddingLeft:'.5em'})
       el-col(style={flex:'1 1 auto',width:'auto'})
-        pre
+        pre(v-if='device')
           | 设备信息：
           |   {{ device.name }}
           |   {{ device.id }}
